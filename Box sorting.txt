@@ -1,0 +1,61 @@
+#include <Servo.h>
+
+long readUltrasonicDistance(int triggerPin, int echoPin)
+{
+  pinMode(triggerPin, OUTPUT);  // Clear the trigger
+  digitalWrite(triggerPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigger pin to HIGH state for 10 microseconds
+  digitalWrite(triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(triggerPin, LOW);
+  pinMode(echoPin, INPUT);
+  // Reads the echo pin, and returns the sound wave travel time in microseconds
+  return pulseIn(echoPin, HIGH);
+}
+
+Servo servo_5;
+
+Servo servo_6;
+
+Servo servo_7;
+
+void setup()
+{
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  servo_5.attach(5);
+
+  servo_6.attach(6);
+
+  servo_7.attach(7);
+
+}
+
+void loop()
+{
+  digitalWrite(8, LOW);
+  digitalWrite(9, HIGH);
+  if (0.01723 * readUltrasonicDistance(4, 4) < 50 && (0.01723 * readUltrasonicDistance(3, 3) > 50 && 0.01723 * readUltrasonicDistance(2, 2) > 50)) {
+    servo_5.write(90);
+    servo_6.write(45);
+    servo_7.write(0);
+  } else {
+    if (0.01723 * readUltrasonicDistance(4, 4) < 50 && (0.01723 * readUltrasonicDistance(3, 3) < 50 && 0.01723 * readUltrasonicDistance(2, 2) > 50)) {
+      servo_5.write(90);
+      servo_6.write(135);
+      servo_7.write(180);
+    } else {
+      if (0.01723 * readUltrasonicDistance(4, 4) < 50 && (0.01723 * readUltrasonicDistance(3, 3) < 50 && 0.01723 * readUltrasonicDistance(2, 2) < 50)) {
+        servo_5.write(90);
+        servo_6.write(90);
+        servo_7.write(90);
+      } else {
+        servo_5.write(0);
+        servo_6.write(0);
+        servo_7.write(0);
+      }
+    }
+  }
+  delay(10); // Delay a little bit to improve simulation performance
+}
